@@ -1,5 +1,5 @@
 {
-	"name" : "pbalan-directoryparser",
+	"name" : "pbalan/DirectoryParser",
 	"description" : "DirectoryParser",
 	"keywords" : ["DirectoryParser"],
 	"repositories" : [
