@@ -3,11 +3,11 @@
 	"description" : "DirectoryParser",
 	"license": "MIT",
 	"keywords" : ["DirectoryParser"],
-	"repositories" : [
-	{
-		"type": "vcs",
-		"url": "https://github.com/pbalan/directory-parser.git"
-	}
+	"homepage" : "https://github.com/pbalan/directory-parser",
+	"authors" : [
+		{
+			"name" : "prashant"
+		}
 	],
     "extra": {
         "branch-alias": {
@@ -15,7 +15,9 @@
         }
     },
 	"require" : {
-		"php": ">=5.3.3",
-		"pbalan/directory-parser": "*"
-	}
+		"php": ">=5.3.3"
+	},
+	"autoload" : {
+		"psr-0" : {"DirectoryParser" : ""}
+	 }
 }
