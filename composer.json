@@ -1,6 +1,7 @@
 {
 	"name" : "pbalan/directory-parser",
 	"description" : "DirectoryParser",
+	"license": "MIT",
 	"keywords" : ["DirectoryParser"],
 	"repositories" : [
 	{
