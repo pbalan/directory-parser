@@ -6,7 +6,7 @@
 	"repositories" : [
 	{
 		"type": "vcs",
-		"url": "https://github.com/pbalan/DirectoryParser.git"
+		"url": "https://github.com/pbalan/directory-parser.git"
 	}
 	],
     "minimum-stability": "dev",
