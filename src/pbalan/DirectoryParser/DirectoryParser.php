@@ -5,10 +5,11 @@
 	
 	namespace pbalan\DirectoryParser;
 	
-	class DirectoryParser(){
+	class DirectoryParser{
 		private $dir = null;
 		private $allowedExts = array('jpg','jpeg','gif','png');
 		private $recurse = false;
+		private $recurseCreate = false;
 		
 		public function __construct($dir='', $allowedExts='')
 		{
