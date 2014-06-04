@@ -11,7 +11,7 @@
 	],
 	"autoload" : {
 		"psr-0" : {"pbalan\\DirectoryParser\\" : "src/"}
-	},
+	 },
 	"require" : {
 		"php": ">=5.3.3"
 	},
@@ -20,6 +20,5 @@
             "dev-master": "1.0.x-dev"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "minimum-stability": "dev"
 }
