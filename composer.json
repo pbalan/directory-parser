@@ -9,6 +9,6 @@
 	}
 	],
 	"require" : {
-		"pbalan/DirectoryParser" : "dev-master"
+		"pbalan/directory-parser" : "dev-master"
 	}
 }
