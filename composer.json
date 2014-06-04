@@ -1,7 +1,7 @@
 {
-	"name" : 'DirectoryParser',
-	"description" : 'DirectoryParser',
-	"keywords" : ['DirectoryParser'],
+	"name" : "DirectoryParser",
+	"description" : "DirectoryParser",
+	"keywords" : ["DirectoryParser"],
 	"repositories" : [
 	{
 		"type": "vcs",
@@ -9,6 +9,6 @@
 	}
 	],
 	"require" : {
-		"pbalan/webbot" : "dev-master"
+		"pbalan/DirectoryParser" : "dev-master"
 	}
 }
