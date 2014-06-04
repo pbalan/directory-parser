@@ -1,0 +1,14 @@
+{
+	"name" : 'DirectoryParser',
+	"description" : 'DirectoryParser',
+	"keywords" : ['DirectoryParser'],
+	"repositories" : [
+	{
+		"type": "vcs",
+		"url": "https://github.com/pbalan/DirectoryParser.git"
+	}
+	],
+	"require" : {
+		"pbalan/webbot" : "dev-master"
+	}
+}
