@@ -10,6 +10,7 @@
 		private $allowedExts = array('jpg','jpeg','gif','png');
 		private $recurse = false;
 		private $recurseCreate = false;
+		private $relative = null;
 		
 		public function __construct($dir='', $allowedExts='')
 		{
@@ -104,6 +105,29 @@
 			}
 			
 			return $this->dir;
+		}
+		
+		public function checkDirectoryFlow()
+		{
+			if(substr($this->dir, (strlen($this->dir)-2))!='/' || substr($this->dir, (strlen($this->dir)-2))!='\\')
+			{
+				$this->dir .= '/';
+			}
+			return true;
+		}
+		
+		public function addRelativeDirectory($relative='')
+		{
+			if(false===empty($relative) && true===is_string($relative))
+			{
+				if(true===is_dir($this->dir) && true===$this->checkDirectoryFlow())
+				{
+					if(true===is_dir($this->dir.$relative))
+					{
+						$this->createDirectory($this->dir.$this->relative, 0777, true);
+					}
+				}
+			}
 		}
 	}
 ?>
