@@ -9,7 +9,6 @@
 		"url": "https://github.com/pbalan/directory-parser.git"
 	}
 	],
-    "minimum-stability": "dev",
     "extra": {
         "branch-alias": {
             "dev-master": "1.0.x-dev"
@@ -17,6 +16,6 @@
     },
 	"require" : {
 		"php": ">=5.3.3",
-		"pbalan/directory-parser": "dev-master"
+		"pbalan/directory-parser": "*"
 	}
 }
