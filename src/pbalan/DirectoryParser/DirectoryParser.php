@@ -49,7 +49,7 @@
 				if($entry[0] == ".") continue;
 				if(is_dir($this->dir.$entry)) 
 				{
-					if(in_array(fileexts($this->dir.$entry),$this->allowedExts))
+					if(in_array($this->fileexts($this->dir.$entry),$this->allowedExts))
 					{
 						$retval[] = $this->dir.$entry; //files only
 					}
