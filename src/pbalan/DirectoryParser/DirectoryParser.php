@@ -12,12 +12,9 @@
 		private $recurseCreate = false;
 		private $relative = null;
 		
-		public function __construct($dir='', $allowedExts='')
+		public function __construct($dir=null, $allowedExts='')
 		{
-			if(false===empty($dir) && true===is_dir($dir))
-			{
-				$this->dir = $dir;
-			}
+			$this->dir = $dir;
 			if(false===empty($allowedExts) && true===is_array($allowedExts))
 			{
 				$this->allowedExts = $allowedExts;
@@ -114,19 +111,15 @@
 			return true;
 		}
 		
-		public function addRelativeDirectory($relative='')
+		public function addRelativeDirectory($relative)
 		{
-			if(false===empty($relative) && true===is_string($relative))
+			$this->relative = $relative;
+			$this->checkDirectoryFlow();
+			if(false===is_dir($this->dir.$this->relative))
 			{
-				$this->relative = $relative;
-				if(true===is_dir($this->dir) && true===$this->checkDirectoryFlow())
-				{
-					if(false===is_dir($this->dir.$this->relative))
-					{
-						$this->createDirectory($this->dir.$this->relative, 0777, true);
-					}
-				}
+				return $this->createDirectory($this->dir.$this->relative, 0777, true);
 			}
+			
 		}
 		
 		/*	Copy a file from source directory to destination directory
