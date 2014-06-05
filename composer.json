@@ -15,5 +15,5 @@
 	"require" : {
 		"php": ">=5.3.3"
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "dev-master"
 }
