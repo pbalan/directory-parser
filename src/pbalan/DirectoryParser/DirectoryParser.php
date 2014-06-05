@@ -75,8 +75,6 @@
 		{
 			$extension = explode('.',$filename);
 			$extension = end($extension);
-			//	$cnt = count($extension);
-			//	$extension = $extension[$cnt-1];
 			return $extension;
 		}
 		
@@ -120,13 +118,36 @@
 		{
 			if(false===empty($relative) && true===is_string($relative))
 			{
+				$this->relative = $relative;
 				if(true===is_dir($this->dir) && true===$this->checkDirectoryFlow())
 				{
-					if(true===is_dir($this->dir.$relative))
+					if(false===is_dir($this->dir.$this->relative))
 					{
 						$this->createDirectory($this->dir.$this->relative, 0777, true);
 					}
 				}
+			}
+		}
+		
+		/*	Copy a file from source directory to destination directory
+		 *	@param	source:			directory to copy from
+		 *	@param	destination:	directory to copy to
+		 */
+		public function copyToDirectory($source, $destination)
+		{
+			//check to make sure the file exists
+			if(file_exists($source))
+			{
+				copy($source,$destination);
+			}
+			//check to make sure the file exists
+			if(file_exists($destination))
+			{
+				return true;
+			} 
+			else 
+			{
+				return false;
 			}
 		}
 	}
