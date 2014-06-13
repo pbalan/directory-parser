@@ -20,11 +20,27 @@
 				$this->allowedExts = $allowedExts;
 			}
 		}
-		
-		function getFileList($dir='', $exts='', $recurse='')
+        public function getCurrentDirectory()
+        {
+            return $this->dir;
+        }
+        public function setCurrentDirectory($dir)
+        {
+            if(true===is_dir($dir)){
+                $this->dir = $dir;
+            }
+            return $this->dir;
+        }
+		public function getFileList($dir='', $exts='', $recurse='', $filename='', $dirOnly=false)
 		{
 			// array to hold return value
 			$retval = array();
+            $dirval = array();
+            if(false===empty($dir) && true===is_dir($dir))
+            {
+                $this->dir = $dir;
+            }
+            
 			if(false===empty($exts) && true===is_array($exts))
 			{
 				$this->allowedExts = $exts;
@@ -33,41 +49,85 @@
 			{
 				$this->recurse = $recurse;
 			}
-			// add trailing slash if missing
-			if(substr($this->dir, -1) != "/")
-			{
-				$this->dir .= "/";
-			}
+			
+            $this->checkDirectoryFlow();
+            //echo "dir: ".$this->dir.", dirOnly: ".$dirOnly."<br/>";
 			// open pointer to directory and read list of files
 			$d = @dir($this->dir) or die("getFileList: Failed opening directory ".$this->dir."for reading");
 			while(false !== ($entry = $d->read())) 
 			{
 				// skip hidden files
 				if($entry[0] == ".") continue;
-				if(is_dir($this->dir.$entry)) 
-				{
-					if(in_array($this->fileexts($this->dir.$entry),$this->allowedExts))
-					{
-						$retval[] = $this->dir.$entry; //files only
-					}
-					if(true===$this->recurse && true===is_readable($this->dir."$entry/")) 
-					{
-						$retval = array_merge($retval, $this->getFileList($this->dir."$entry/", true));
-					}
-				} 
-				elseif(true===is_readable($this->dir."$entry")) 
-				{
-					if(true===in_array($this->fileexts($this->dir.$entry),$this->allowedExts))
-					{
-						$retval[] = $this->dir.$entry;//files only
-					}
-				}
-				$d->close();
-				
-				return $retval;
+                if(is_dir($this->dir.$entry)) 
+                {
+                    if(in_array($this->fileexts($this->dir.$entry),$this->allowedExts))
+                    {
+                        if(false==empty($filename) && false!==stripos($this->dir.$entry,$filename))
+                        {
+                            return $this->dir.$entry;//files only
+                        } else {
+                            $retval[] = $this->dir.$entry; //files only
+                        }
+                    } else if(true===is_bool($dirOnly) && true===$dirOnly && true===is_dir($this->dir."$entry/")){
+                        $dirval[] = $this->dir."$entry";
+                    }
+                    if(true===$this->recurse && true===is_readable($this->dir."$entry/")) 
+                    {
+                        $retval = array_merge($retval, $this->getFileList($this->dir."$entry/", $this->allowedExts, $this->recurse, $filename));
+                    }
+                } 
+                elseif(true===is_readable($this->dir."$entry")) 
+                {
+                    if(true===in_array($this->fileexts($this->dir.$entry),$this->allowedExts))
+                    {
+                        if(false==empty($filename) && false!==stripos($this->dir.$entry,$filename))
+                        {
+                            return $this->dir.$entry; //files only
+                        } else if(true===is_bool($dirOnly) && true===$dirOnly && true===is_dir($this->dir.$entry)){
+                            $dirval[] = $this->dir.$entry;
+                        } else {
+                            $retval[] = $this->dir.$entry;//files only
+                        }
+                    }
+                }
 			}
+            $d->close();
+            if(true===is_bool($dirOnly) && true===$dirOnly)
+            {
+                return $dirval;
+            } else {
+                return $retval;
+            }
 		}
 		
+        public function searchFile($filename, $dir='', $allowedExts='', $recurse=false){
+            $return = '';
+            if(false===empty($filename))
+            {
+                if(false===empty($dir))
+                {
+                    if(true===is_dir($dir))
+                    {
+                        $this->dir = $dir;
+                    } else {
+                        echo "Directory $dir does not exist."; exit;
+                    }
+                }
+                if(false===empty($allowedExts) && true===is_array($allowedExts))
+                {
+                    $this->allowedExts = $allowedExts;
+                }
+                $this->checkDirectoryFlow();
+                
+                $return = $this->getFileList($this->dir, $this->allowedExts, $recurse, $filename);
+            }
+            else 
+            {
+                echo "Please provide a File name to search"; exit;
+            }
+            return $return;
+        }
+        
 		public function fileexts($filename)
 		{
 			$extension = explode('.',$filename);
@@ -84,7 +144,7 @@
 			{
 				$this->dir = $_SERVER['DOCUMENT_ROOT'];
 			}
-			
+			$this->checkDirectoryFlow();
 			if(true===is_bool($recurse) && false===empty($recurse)){
 				$this->recurseCreate = $recurse;
 			}
@@ -102,19 +162,31 @@
 			return $this->dir;
 		}
 		
-		public function checkDirectoryFlow()
+		public function checkDirectoryFlow($dir='')
 		{
-			if(substr($this->dir, (strlen($this->dir)-2))!='/' || substr($this->dir, (strlen($this->dir)-2))!='\\')
-			{
-				$this->dir .= '/';
-			}
-			return true;
+            if(false===empty($dir))
+            {
+                $dir = str_replace('\\','/',$dir);
+                if(substr($dir, (strlen($dir)-1))!='/')
+                {
+                    $dir .= '/';
+                }
+                return $dir;
+            } else {
+                $this->dir = str_replace('\\','/',$this->dir);
+                if(substr($this->dir, (strlen($this->dir)-1))!='/')
+                {
+                    $this->dir .= '/';
+                }
+                return true;
+            }
 		}
 		
 		public function addRelativeDirectory($relative)
 		{
 			$this->relative = $relative;
 			$this->checkDirectoryFlow();
+            echo $this->dir.$this->relative."<br/>";
 			if(false===is_dir($this->dir.$this->relative))
 			{
 				return $this->createDirectory($this->dir.$this->relative, 0777, true);
@@ -143,5 +215,66 @@
 				return false;
 			}
 		}
+        
+        public function createFile($filename, $dir='', $content='')
+        {
+            $path = '';
+            if(false===empty($filename))
+            {
+                if(false===empty($dir))
+                {
+                    if(true===is_dir($dir))
+                    {
+                        $this->dir = $dir;
+                    }
+                }
+                $this->checkDirectoryFlow();
+                $path = $this->dir.$filename;
+                $fh = fopen($path, 'w+');
+                if(false===empty($content))
+                {
+                    try{
+                        fwrite($fh, $content);
+                    }
+                    catch(Exception $e)
+                    {
+                        echo $e->Message;
+                    }
+                }
+                fclose($fh);
+            }
+            return $path;
+        }
+        
+        public function readFile($filename)
+        {
+            $content = '';
+            if(false===empty($filename) && true===file_exists($filename))
+            {
+                $fh = fopen($filename, 'r');
+                $content = fread($fh, filesize($filename));
+                fclose($fh);
+            }
+            return $content;
+        }
+        
+        public function listDirectories($dir='')
+        {
+            $dirList = '';
+            if(false===empty($dir) && true===is_dir($dir))
+            {
+                $dirList = $this->getFileList($dir, $this->allowedExts, false, '', true);
+            }
+            
+            return $dirList;
+        }
+        
+        public function moveToDir($source, $destination)
+        {
+            if(false===empty($source) && false===empty($destination))
+            {
+                rename($source, $destination);
+            }
+        }
 	}
 ?>
